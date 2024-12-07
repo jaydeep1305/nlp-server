@@ -1,0 +1,215 @@
+openapi: '3.0.3'
+info:
+  title: API Title
+  version: '1.0'
+servers:
+  - url: https://127.0.0.1:5000/
+
+tags:
+  - name: Text Analysis
+    description: Analyze A Text And Get Sentiment , Entities And Categories Of Text 
+
+paths:
+  /test:
+    get:
+      responses:
+        '200':
+          description: OK
+
+
+  /entities:
+    post:
+      summary: Analyze entities in the provided text
+      description: This endpoint analyzes the entities in the provided text using Google Cloud's Natural Language API.
+      tags:
+        - ai-analysis
+      operationId: analyzeEntities
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                text:
+                  type: string
+                  description: The text to analyze for entities.
+                  example: "Google Cloud is a great tool for AI and machine learning."
+              required:
+                - text
+      responses:
+        '200':
+          description: Successfully analyzed entities in the provided text.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  entities:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        name:
+                          type: string
+                          description: The name of the identified entity.
+                          example: "Google Cloud"
+                        type:
+                          type: string
+                          description: The type of the identified entity.
+                          example: "ORG"
+                        salience:
+                          type: number
+                          format: float
+                          description: The salience of the entity within the text.
+                          example: 0.5
+                        metadata:
+                          type: object
+                          description: Additional metadata for the entity, if available.
+                          example: {}
+        '400':
+          description: Bad Request - Missing required "text" field in the request body.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "Missing required field 'text'"
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "Internal Server Error"
+
+  /sentiment:
+    post:
+      summary: Analyze the sentiment of the provided text
+      description: This endpoint analyzes the sentiment of the provided text using Google Cloud's Natural Language API.
+      tags:
+        - ai-analysis
+      operationId: analyzeSentiment
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                text:
+                  type: string
+                  description: The text to analyze for sentiment.
+                  example: "I love using Google Cloud for AI tasks."
+              required:
+                - text
+      responses:
+        '200':
+          description: Successfully analyzed the sentiment of the provided text.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  sentiments:
+                    type: object
+                    properties:
+                      score:
+                        type: number
+                        format: float
+                        description: The sentiment score of the text, where -1 is negative and 1 is positive.
+                        example: 0.5
+                      magnitude:
+                        type: number
+                        format: float
+                        description: The magnitude of sentiment, indicating the strength of sentiment in the text.
+                        example: 1.0
+        '400':
+          description: Bad Request - Missing required "text" field in the request body.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "Missing required field 'text'"
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "Internal Server Error"
+
+
+  /categories:
+    post:
+      summary: Analyze the categories of the provided text
+      description: This endpoint analyzes the categories of the provided text using Google Cloud's Natural Language API.
+      tags:
+        - ai-analysis
+      operationId: analyzeCategories
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                text:
+                  type: string
+                  description: The text to analyze for categories.
+                  example: "Google Cloud is transforming AI and machine learning with powerful tools."
+              required:
+                - text
+      responses:
+        '200':
+          description: Successfully analyzed the categories of the provided text.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  categories:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        name:
+                          type: string
+                          description: The name of the identified category.
+                          example: "Technology"
+                        confidence:
+                          type: number
+                          format: float
+                          description: The confidence score for the category classification.
+                          example: 0.85
+        '400':
+          description: Bad Request - Missing required "text" field in the request body.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "Missing required field 'text'"
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "Internal Server Error"
